@@ -12,12 +12,23 @@ import httpx
 logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def clean(val: str | None) -> str:
+    """Elimina comillas y espacios que Railway puede agregar."""
+    if not val:
+        return ""
+    return val.strip().strip('"').strip("'").strip()
+
 # --- Config ---
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip().strip('"').strip("'")
-CHAT_ID = os.getenv("CHAT_ID", "").strip().strip('"').strip("'")
-SERPAPI_KEY = os.getenv("SERPAPI_KEY", "").strip().strip('"').strip("'")
-CHECK_INTERVAL_HOURS = int(os.getenv("CHECK_INTERVAL_HOURS", "6").strip().strip('"').strip("'"))
-PRICE_THRESHOLD_USD = float(os.getenv("PRICE_THRESHOLD_USD", "300").strip().strip('"').strip("'"))
+TELEGRAM_TOKEN = clean(os.environ.get("TELEGRAM_TOKEN"))
+CHAT_ID = clean(os.environ.get("CHAT_ID"))
+SERPAPI_KEY = clean(os.environ.get("SERPAPI_KEY"))
+CHECK_INTERVAL_HOURS = int(clean(os.environ.get("CHECK_INTERVAL_HOURS", "6")))
+PRICE_THRESHOLD_USD = float(clean(os.environ.get("PRICE_THRESHOLD_USD", "300")))
+
+# DEBUG — aparece en los logs de Railway
+print(f"DEBUG TOKEN: '{TELEGRAM_TOKEN[:10]}...'" if TELEGRAM_TOKEN else "DEBUG TOKEN: VACÍO")
+print(f"DEBUG CHAT_ID: '{CHAT_ID}'")
+print(f"DEBUG TOKEN LEN: {len(TELEGRAM_TOKEN)}")
 
 # Orígenes Argentina
 ORIGINS = ["EZE", "AEP"]  # Podés agregar COR, MDZ, ROS si querés más cobertura
