@@ -55,6 +55,8 @@ AVAILABLE_DESTINATIONS = {
     "🇦🇺 Sydney": "SYD",
     "🇨🇦 Toronto": "YYZ",
     "🇵🇹 Lisboa": "LIS",
+    "🇵🇱 Varsovia": "WAW",
+    "🇵🇱 Cracovia": "KRK",
 }
 
 SELECTING_DESTINATIONS = 1
