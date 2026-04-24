@@ -112,6 +112,11 @@ async def find_deals() -> list:
                             # Extraer info del primer segmento
                             legs = flight.get("flights", [{}])
                             first = legs[0] if legs else {}
+                            booking_token = flight.get("booking_token", "")
+                            if booking_token:
+                                buy_url = f"https://www.google.com/flights?hl=es#flt={origin}.{destination}.{date};c:USD;e:1;sd:1;t:f;tt:o&booking_token={booking_token}"
+                            else:
+                                buy_url = f"https://www.google.com/flights?hl=es#flt={origin}.{destination}.{date};c:USD;e:1;sd:1;t:f;tt:o"
                             deals.append({
                                 "origin": origin,
                                 "destination": destination,
@@ -121,6 +126,7 @@ async def find_deals() -> list:
                                 "departure": first.get("departure_airport", {}).get("time", ""),
                                 "duration": flight.get("total_duration", 0),
                                 "stops": len(legs) - 1,
+                                "buy_url": buy_url,
                             })
     return deals
 
@@ -139,7 +145,8 @@ def format_deals(deals: list) -> str | None:
             f"🟢 *{d['origin']} → {d['destination']}*\n"
             f"   📅 {d['date']}  🕐 {d['departure']}\n"
             f"   💵 *USD {d['price']:.0f}*  •  {stops}  •  {duracion}\n"
-            f"   ✈️ {d['airline']}\n\n"
+            f"   ✈️ {d['airline']}\n"
+            f"   [🛒 Ver y comprar en Google Flights]({d['buy_url']})\n\n"
         )
     msg += f"_Actualizado: {datetime.now().strftime('%d/%m %H:%M')}_"
     return msg
